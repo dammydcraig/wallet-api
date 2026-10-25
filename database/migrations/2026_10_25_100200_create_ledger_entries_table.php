@@ -1,0 +1,26 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('ledger_entries', function (Blueprint $table) {
+            $table->id();
+            $table->foreignUuid('wallet_id')->constrained()->restrictOnDelete();
+            $table->foreignUuid('transfer_id')->constrained()->restrictOnDelete();
+            $table->bigInteger('amount'); // signed minor units: credit positive, debit negative
+            $table->timestamps();
+
+            $table->index(['wallet_id', 'id']);
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('ledger_entries');
+    }
+};
